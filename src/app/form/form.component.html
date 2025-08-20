@@ -1,0 +1,140 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="p-4 shadow-sm rounded bg-light"
+>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="inputEmail4" class="form-label">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        id="inputEmail4"
+        placeholder="Email"
+        formControlName="email"
+      />
+    </div>
+    <div class="col-md-6">
+      <label for="inputName4" class="form-label">Nama</label>
+      <input
+        type="text"
+        class="form-control"
+        id="inputName4"
+        placeholder="Nama"
+        formControlName="name"
+      />
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="inputAddress" class="form-label">Universitas</label>
+    <input
+      type="text"
+      class="form-control"
+      id="inputAddress"
+      placeholder="IPB University"
+      formControlName="university"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="inputAddress2" class="form-label">Jurusan</label>
+    <input
+      type="text"
+      class="form-control"
+      id="inputAddress2"
+      placeholder="Software Engineering"
+      formControlName="major"
+    />
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="inputCity" class="form-label">Asal Daerah</label>
+      <input
+        type="text"
+        class="form-control"
+        id="inputCity"
+        formControlName="city"
+      />
+    </div>
+    <div class="col-md-4">
+      <label for="inputState" class="form-label">Departmen</label>
+      <select id="inputState" class="form-select" formControlName="department">
+        <option value="" disabled selected>Choose...</option>
+        <option value="IT">IT</option>
+        <option value="CorpCom">CorpCom</option>
+        <option value="Engineering">Engineering</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label for="inputZip" class="form-label">NIK</label>
+      <input
+        type="text"
+        class="form-control"
+        id="inputNik"
+        formControlName="nik"
+      />
+    </div>
+  </div>
+
+  <div class="mb-3 form-check">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      id="gridCheck"
+      formControlName="check"
+    />
+    <label class="form-check-label" for="gridCheck"> Check me out </label>
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100">
+    {{ editingIndex !== null ? "Update" : "Submit" }}
+  </button>
+  <button
+    type="button"
+    class="btn btn-secondary w-100 mt-2"
+    *ngIf="editingIndex !== null"
+    (click)="cancelEdit()"
+  >
+    Cancel
+  </button>
+</form>
+
+<!-- Data List -->
+<div class="mt-4 p-4 shadow-sm rounded bg-white border" *ngIf="submissions.length">
+  <h5 class="mb-3 fw-semibold text-secondary">Data Karyawan</h5>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light text-center">
+        <tr>
+          <th>Nama</th>
+          <th>NIK</th>
+          <th>Departemen</th>
+          <th style="width: 150px">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of submissions; let i = index">
+          <td class="fw-medium">{{ s.name }}</td>
+          <td>{{ s.nik }}</td>
+          <td>{{ s.department }}</td>
+          <td class="text-center">
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-outline-info" (click)="viewSubmission(i)" title="View">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="btn btn-outline-primary" (click)="startEdit(i)" title="Edit">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button class="btn btn-outline-danger" (click)="deleteSubmission(i)" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

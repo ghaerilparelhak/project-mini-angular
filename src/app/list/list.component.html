@@ -1,0 +1,93 @@
+<div class="container mt-4">
+  <h4 class="mb-3">Daftar Mahasiswa</h4>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Nama</th>
+              <th>NIK</th>
+              <th>Departemen</th>
+              <th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of students; let i = index">
+              <td>{{ s.nama }}</td>
+              <td>{{ s.nik }}</td>
+              <td>{{ s.departmen }}</td>
+              <td class="text-center">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary me-1"
+                  (click)="onView(i)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#viewModal"
+                >
+                  View
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-warning me-1"
+                  (click)="onEdit(i)"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-danger"
+                  (click)="onDelete(i)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="students.length === 0">
+              <td colspan="4" class="text-center text-muted py-3">
+                Belum ada data
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VIEW -->
+<div class="modal fade" id="viewModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-sm" *ngIf="selectedStudent">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Detail Mahasiswa</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Nama</dt>
+          <dd class="col-sm-8">{{ selectedStudent.nama }}</dd>
+
+          <dt class="col-sm-4">NIK</dt>
+          <dd class="col-sm-8">{{ selectedStudent.nik }}</dd>
+
+          <dt class="col-sm-4">Departemen</dt>
+          <dd class="col-sm-8">{{ selectedStudent.departmen }}</dd>
+
+          <dt class="col-sm-4">Email</dt>
+          <dd class="col-sm-8">{{ selectedStudent.email }}</dd>
+
+          <dt class="col-sm-4">Universitas</dt>
+          <dd class="col-sm-8">{{ selectedStudent.universitas }}</dd>
+
+          <dt class="col-sm-4">Jurusan</dt>
+          <dd class="col-sm-8">{{ selectedStudent.jurusan }}</dd>
+
+          <dt class="col-sm-4">Asal</dt>
+          <dd class="col-sm-8">{{ selectedStudent.asal }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
