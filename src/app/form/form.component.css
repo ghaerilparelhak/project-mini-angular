@@ -1,0 +1,6 @@
+.table-rounded {
+  border-radius: 0.75rem; /* sama seperti rounded-3 */
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  overflow: hidden;       /* biar sudutnya kepotong rapi */
+}
