@@ -1,0 +1,11 @@
+{
+  "/rss": {
+    "target": "https://viva.co.id",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "warn",
+    "pathRewrite": {
+      "^/rss": ""
+    }
+  }
+}

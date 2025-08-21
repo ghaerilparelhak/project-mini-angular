@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-interface Student {
-  nama: string;
-  nik: string;
-  departmen: string;
-  email: string;
-  universitas: string;
-  jurusan: string;
-  asal: string;
-}
+type Article = {
+  title: string;
+  urlToImage?: string | null;
+  publishedAt: string; // ISO string
+  url?: string;
+  description?: string;
+};
 
 @Component({
   selector: 'app-list',
@@ -16,58 +15,58 @@ interface Student {
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
 })
-export class ListComponent {
-  students: Student[] = [
-    {
-      nama: 'Andi',
-      nik: '12345',
-      departmen: 'IT',
-      email: 'andi@mail.com',
-      universitas: 'IPB',
-      jurusan: 'Informatika',
-      asal: 'Bogor',
-    },
-    {
-      nama: 'Budi',
-      nik: '67890',
-      departmen: 'Finance',
-      email: 'budi1@mail.com',
-      universitas: 'UI',
-      jurusan: 'Sistem Informasi',
-      asal: 'Depok',
-    },
-    {
-      nama: 'Citra',
-      nik: '11223',
-      departmen: 'HRD',
-      email: 'citra@mail.com',
-      universitas: 'ITS',
-      jurusan: 'Teknik Elektro',
-      asal: 'Surabaya',
-    },
-  ];
+export class ListComponent implements OnInit {
+  articles: Article[] = [];
+  loading = false;
+  error: string | null = null;
+  // Public, no-key JSON API with CORS: DEV.to articles
+  private readonly API_URL = 'https://dev.to/api/articles?per_page=30';
 
-  selectedStudent?: Student;
-
-  // 🔹 View modal
-  onView(index: number) {
-    this.selectedStudent = this.students[index];
-    const modal = document.getElementById('viewModal');
-    if (modal) {
-      const modalInstance = new (window as any).bootstrap.Modal(modal);
-      modalInstance.show();
-    }
+  constructor(private http: HttpClient) {
+    
   }
 
-  // 🔹 Edit (sementara alert)
-  onEdit(index: number) {
-    alert(`Edit data: ${this.students[index].nama}`);
+  ngOnInit(): void {
+    this.loadNews();
   }
 
-  // 🔹 Delete (langsung hapus dari array)
-  onDelete(index: number) {
-    if (confirm(`Yakin hapus data ${this.students[index].nama}?`)) {
-      this.students.splice(index, 1);
-    }
+  loadNews(): void {
+    this.loading = true;
+    this.error = null;
+
+    this.http.get<any[]>(this.API_URL).subscribe({
+      next: (rows) => {
+        try {
+          const arr = Array.isArray(rows) ? rows : [];
+          this.articles = arr.map((r) => {
+            const title: string = r?.title ?? '';
+            const url: string | undefined =
+              r?.url ?? r?.canonical_url ?? undefined;
+            const publishedAt: string = r?.published_at
+              ? new Date(r.published_at).toISOString()
+              : new Date().toISOString();
+            const urlToImage: string | null =
+              r?.cover_image ?? r?.social_image ?? null;
+            const description: string | undefined = r?.description ?? undefined;
+            return { title, url, publishedAt, urlToImage, description };
+          });
+          this.loading = false;
+        } catch {
+          this.error = 'Gagal memproses data.';
+          this.loading = false;
+        }
+      },
+      error: (err) => {
+        const msg = err?.message || err?.statusText || 'Gagal memuat data.';
+        this.error = msg;
+        this.loading = false;
+      },
+    });
+  }
+
+  onImgError(evt: Event): void {
+    const el = evt.target as HTMLImageElement;
+    // Simple placeholder if image URL is missing/broken
+    el.src = 'https://via.placeholder.com/348x225?text=No+Image';
   }
 }
